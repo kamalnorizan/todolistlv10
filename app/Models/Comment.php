@@ -19,4 +19,5 @@ class Comment extends Model
 
     protected $guarded = ['id'];
 
+
 }

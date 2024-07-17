@@ -16,9 +16,9 @@ use App\Http\Controllers\MyFirstController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-DB::listen(function ($event) {
-    dump($event->sql);
-});
+// DB::listen(function ($event) {
+//     dump($event->sql);
+// });
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,6 +36,7 @@ Route::get('/users/{id}', [UserController::class, 'show']);
 Route::get('/users/{id}/edit', [UserController::class, 'edit']);
 
 Route::get('tasks',[TaskController::class,'index']);
+Route::get('tasks/{task}',[TaskController::class,'show'])->name('tasks.show');
 
 Auth::routes();
 

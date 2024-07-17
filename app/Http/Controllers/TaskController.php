@@ -33,10 +33,14 @@ class TaskController extends Controller
 
         // $tasks = Task::where('title', 'like', '%Nulla%')->get();
         // select * from `tasks` where `id` 10
-        $task = Task::find(10);
+        // $task = Task::find(10);
 
-        dd($task->comments->first()->user->tasks);
+        $tasks = Task::all();
 
+        return view('tasks.index', compact('tasks'));
+    }
 
+    function show(Task $task) {
+        dd($task);
     }
 }

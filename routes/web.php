@@ -36,8 +36,8 @@ Route::get('/users/{id}', [UserController::class, 'show']);
 Route::get('/users/{id}/edit', [UserController::class, 'edit']);
 
 Route::get('tasks',[TaskController::class,'index']);
+Route::post('tasks/ajaxloadtasks',[TaskController::class,'ajaxloadtasks'])->name('tasks.ajaxloadtasks');
 Route::get('tasks/{task}',[TaskController::class,'show'])->name('tasks.show');
-Route::post('tasks',[TaskController::class,'store'])->name('tasks.store');
 
 Auth::routes();
 

@@ -27,24 +27,6 @@
         </div>
     </div>
 </div>
-<form method="POST"  action="{{ route('tasks.store') }}" class="form-horizontal">
-     @csrf
-    <div class="form-group {{ $errors->has('inputname') ? 'has-error' : '' }}">
-        <label for="inputname">Input label</label>
-        <select id="negeriselect" name="negeriselect" class="form-control" disabled>
-            <option value="2">Johor</option>
-            <option value="3">Pulau Pinang</option>
-        </select>
-        <small class="text-danger">{{ $errors->first('inputname') }}</small>
-    </div>
 
-    <input type="hidden" name="negeri" value="value" id="negeri">
-
-    <div class="btn-group float-right">
-        <button type="reset" class="btn btn-warning">Reset</button>
-        <button type="submit" class="btn btn-success">Add</button>
-    </div>
-
-</form>
 @endsection
 

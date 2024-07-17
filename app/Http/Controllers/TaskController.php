@@ -35,12 +35,18 @@ class TaskController extends Controller
         // select * from `tasks` where `id` 10
         // $task = Task::find(10);
 
-        $tasks = Task::all();
+        // $tasks = Task::all();
+        $tasks = Task::with('user')->get();
 
         return view('tasks.index', compact('tasks'));
     }
 
     function show(Task $task) {
-        dd($task);
+        $task = $task->load('comments.user','user');
+        return view('tasks.show', compact('task'));
+    }
+
+    function store(Request $request)  {
+        dd($request);
     }
 }

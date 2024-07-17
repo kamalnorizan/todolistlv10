@@ -16,9 +16,9 @@ use App\Http\Controllers\MyFirstController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-DB::listen(function ($event) {
-    dump($event->sql);
-});
+// DB::listen(function ($event) {
+//     dump($event->sql);
+// });
 
 Route::get('/', function () {
     return view('welcome');

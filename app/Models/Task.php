@@ -19,16 +19,18 @@ class Task extends Model
 
     protected $guarded = ['id'];
 
-    /**
-     * Get the user that owns the Task
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    function getRouteKeyName() {
+        return 'uuid';
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'task_id', 'id');
+    }
 
 }

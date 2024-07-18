@@ -62,6 +62,9 @@ class TaskController extends Controller
         ->addColumn('user', function($task){
             return $task->user->name;
         })
+        ->addColumn('due_date', function($task){
+            return \Carbon\Carbon::parse($task->due_date)->format('d-m-Y');
+        })
         ->addColumn('action', function($task){
             return '<a class="btn btn-primary btn-sm" href="'.route('tasks.show',['task'=>$task->uuid]).'">Show</a>';
         })

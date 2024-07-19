@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\User;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class TaskController extends Controller
@@ -71,7 +72,9 @@ class TaskController extends Controller
 
                 $button .= '<button type="button" data-uuid="'.$task->uuid.'" class="btn btn-warning btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal"> Edit</button> ';
 
-                $button .= '<button type="button" data-uuid="'.$task->uuid.'" class="btn btn-danger btn-sm btn-delete"> Delete</button>';
+                if(Auth::user()->hasPermissionTo('delete-tasks')){
+                    $button .= '<button type="button" data-uuid="'.$task->uuid.'" class="btn btn-danger btn-sm btn-delete"> Delete</button>';
+                }
 
                 return $button;
             })

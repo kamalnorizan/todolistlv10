@@ -59,7 +59,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Batal
                     </button>
-                    <button type="button" class="btn btn-primary">Simpan</button>
+                    <button id="btnKemaskini" type="button" class="btn btn-primary">Simpan</button>
                 </div>
             </div>
         </div>
@@ -70,8 +70,9 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        $('#myTable').DataTable({
+        var myTable = $('#myTable').DataTable({
             processing: true,
             serverSide: true,
             responsive: true,
@@ -104,7 +105,7 @@
             ]
         });
 
-        $(document).on("click",".btn-edit",function (e) {
+        $(document).on("click", ".btn-edit", function(e) {
             var uuid = $(this).data('uuid');
 
             $.ajax({
@@ -115,15 +116,59 @@
                     uuid: uuid
                 },
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     $('#editModal #title').val(response.title);
                     $('#editModal #user_id').val(response.user_id);
                     $('#editModal #due_date').val(response.due_date);
                     $('#editModal #description').val(response.description);
-                    $('#editModal .modal-footer .btn-primary').attr('data-uuid',uuid);
+                    $('#editModal #btnKemaskini').attr('data-uuid', uuid);
                 },
-                error: function (){
+                error: function() {
                     alert("Error");
+                }
+            });
+        });
+
+        $(document).on("click", "#btnKemaskini", function(e) {
+            e.preventDefault();
+            $('.text-danger').text('');
+            $('.is-invalid').removeClass('is-invalid');
+            var id = $(this).attr('data-uuid');
+            $.ajax({
+                type: "post",
+                url: "{{ route('tasks.update') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    uuid: id,
+                    title: $('#title').val(),
+                    user_id: $('#user_id').val(),
+                    due_date: $('#due_date').val(),
+                    description: $('#description').val()
+                },
+                dataType: "json",
+                success: function (response) {
+                    $('#editModal').modal('hide');
+                    swal("Task telah berjaya dikemaskini",{
+                        icon:'success',
+                        buttons: {
+                            cancel: {
+                                text: "OK",
+                                value: null,
+                                visible: true,
+                                className: "",
+                                closeModal: true,
+                            }
+                        }
+                    });
+                    myTable.ajax.reload();
+
+                },
+                error: function(err){
+                    var errors = err.responseJSON.errors;
+                    $.each(errors, function (indexInArray, valueOfElement) {
+                        $('#'+indexInArray).addClass('is-invalid');
+                        $('#'+indexInArray).closest('.form-group').find('.text-danger').text(valueOfElement);
+                    });
                 }
             });
         });

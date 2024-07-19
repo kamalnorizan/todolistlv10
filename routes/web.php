@@ -40,6 +40,7 @@ Route::post('tasks/ajaxloadtasks',[TaskController::class,'ajaxloadtasks'])->name
 Route::get('tasks/create', [TaskController::class,'create'])->name('tasks.create');
 Route::post('tasks', [TaskController::class,'store'])->name('tasks.store');
 Route::get('tasks/{task}',[TaskController::class,'show'])->name('tasks.show');
+Route::post('tasks/ajaxloadtask', [TaskController::class,'ajaxloadtask'])->name('tasks.ajaxloadtask');
 
 Auth::routes();
 

@@ -67,10 +67,24 @@ class TaskController extends Controller
                 return \Carbon\Carbon::parse($task->due_date)->format('d-m-Y');
             })
             ->addColumn('action', function ($task) {
-                return '<a class="btn btn-primary btn-sm" href="' . route('tasks.show', ['task' => $task->uuid]) . '">Show</a>';
+                $button = '<a class="btn btn-primary btn-sm" href="' . route('tasks.show', ['task' => $task->uuid]) . '">Show</a> ';
+
+                $button .= '<button type="button" data-uuid="'.$task->uuid.'" class="btn btn-warning btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal"> Edit</button>';
+
+                return $button;
             })
             ->rawColumns(['action'])
             ->make(true);
+    }
+
+    function ajaxloadtask(Request $request) {
+        $task = Task::where('uuid', $request->uuid)->first();
+
+        if($task){
+            return response()->json($task);
+        }else{
+            return response()->json(['message' => 'Task not found'], 404);
+        }
     }
 
     function create()

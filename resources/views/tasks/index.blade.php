@@ -42,13 +42,9 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#editModal">
-        Edit
-    </button>
-
     <div class="modal fade" id="editModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
         aria-labelledby="modalTitleId" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered " role="document">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalTitleId">
@@ -68,15 +64,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Optional: Place to the bottom of scripts -->
-    <script>
-        const myModal = new bootstrap.Modal(
-            document.getElementById("editModal"),
-            options,
-        );
-    </script>
-
 @endsection
 
 @section('script')
@@ -115,6 +102,30 @@
                     data: 'action'
                 }
             ]
+        });
+
+        $(document).on("click",".btn-edit",function (e) {
+            var uuid = $(this).data('uuid');
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('tasks.ajaxloadtask') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    uuid: uuid
+                },
+                dataType: "json",
+                success: function (response) {
+                    $('#editModal #title').val(response.title);
+                    $('#editModal #user_id').val(response.user_id);
+                    $('#editModal #due_date').val(response.due_date);
+                    $('#editModal #description').val(response.description);
+                    $('#editModal .modal-footer .btn-primary').attr('data-uuid',uuid);
+                },
+                error: function (){
+                    alert("Error");
+                }
+            });
         });
     </script>
 @endsection

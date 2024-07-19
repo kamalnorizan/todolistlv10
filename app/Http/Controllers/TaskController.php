@@ -10,7 +10,8 @@ use Yajra\DataTables\Facades\DataTables;
 
 class TaskController extends Controller
 {
-    function index() {
+    function index()
+    {
         // $tasks = Task::all();
         // // select * from tasks
 
@@ -40,48 +41,52 @@ class TaskController extends Controller
 
         // $tasks = Task::all();
         $tasks = Task::with('user')->get();
-
-        return view('tasks.index', compact('tasks'));
+        $users = User::pluck('name', 'id');
+        return view('tasks.index', compact('tasks', 'users'));
     }
 
-    function show(Task $task) {
-        $task = $task->load('comments.user','user');
+    function show(Task $task)
+    {
+        $task = $task->load('comments.user', 'user');
         return view('tasks.show', compact('task'));
     }
 
-    function ajaxloadtasks(Request $request) {
+    function ajaxloadtasks(Request $request)
+    {
         $tasks = Task::with('user');
 
         return DataTables::of($tasks)
-        ->addIndexColumn()
-        ->addColumn('bil', function($task){
-            return '1';
-        })
-        ->addColumn('user', function($task){
-            return $task->user->name;
-        })
-        ->addColumn('due_date', function($task){
-            return \Carbon\Carbon::parse($task->due_date)->format('d-m-Y');
-        })
-        ->addColumn('action', function($task){
-            return '<a class="btn btn-primary btn-sm" href="'.route('tasks.show',['task'=>$task->uuid]).'">Show</a>';
-        })
-        ->rawColumns(['action'])
-        ->make(true);
+            ->addIndexColumn()
+            ->addColumn('bil', function ($task) {
+                return '1';
+            })
+            ->addColumn('user', function ($task) {
+                return $task->user->name;
+            })
+            ->addColumn('due_date', function ($task) {
+                return \Carbon\Carbon::parse($task->due_date)->format('d-m-Y');
+            })
+            ->addColumn('action', function ($task) {
+                return '<a class="btn btn-primary btn-sm" href="' . route('tasks.show', ['task' => $task->uuid]) . '">Show</a>';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
-    function create() {
-        $users = User::pluck('name','id');
+    function create()
+    {
+        $users = User::pluck('name', 'id');
         return view('tasks.create', compact('users'));
     }
 
-    function store(Request $request) {
+    function store(Request $request)
+    {
         $request->validate([
             "title" => 'required|max:255',
             "user_id" => 'required',
             "due_date" => 'required|date|after_or_equal:today',
             "description" => 'required'
-        ],[
+        ], [
             'title.required' => 'Sila masukkan tajuk',
             'user_id.required' => 'Sila pilih user',
             'due_date.required' => 'Sila pilih tarikh',

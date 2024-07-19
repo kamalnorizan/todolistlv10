@@ -69,7 +69,9 @@ class TaskController extends Controller
             ->addColumn('action', function ($task) {
                 $button = '<a class="btn btn-primary btn-sm" href="' . route('tasks.show', ['task' => $task->uuid]) . '">Show</a> ';
 
-                $button .= '<button type="button" data-uuid="'.$task->uuid.'" class="btn btn-warning btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal"> Edit</button>';
+                $button .= '<button type="button" data-uuid="'.$task->uuid.'" class="btn btn-warning btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal"> Edit</button> ';
+
+                $button .= '<button type="button" data-uuid="'.$task->uuid.'" class="btn btn-danger btn-sm btn-delete"> Delete</button>';
 
                 return $button;
             })
@@ -143,5 +145,11 @@ class TaskController extends Controller
         $task->save();
 
         return redirect()->route('tasks.index');
+    }
+
+    function delete(Request $request) {
+        Task::where('uuid', $request->uuid)->delete();
+
+        return response()->json(['status'=>'success']);
     }
 }

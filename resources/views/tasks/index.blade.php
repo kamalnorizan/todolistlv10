@@ -172,5 +172,45 @@
                 }
             });
         });
+
+        $(document).on("click",".btn-delete",function (e) {
+            var uuid = $(this).data('uuid');
+
+            swal({
+                title: "Are you sure?",
+                text: "The task will be deleted!",
+                icon: "warning",
+                buttons: {cancel: {
+                    text: "Cancel",
+                    value: null,
+                    visible: true,
+                    className: "",
+                    closeModal: true,
+                },
+                confirm: {
+                    text: "Yes, i'm sure!",
+                    value: true,
+                    visible: true,
+                    className: "btn-danger",
+                    closeModal: true
+                }}
+            }).then((value)=>{
+                if(value==true){
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('tasks.delete') }}",
+                        data: {
+                            _token: '{{csrf_token()}}',
+                            uuid: uuid
+                        },
+                        dataType: "json",
+                        success: function (response) {
+                            swal("Deleted!", "The task has been deleted successfully.", "success");
+                            myTable.ajax.reload();
+                        }
+                    });
+                }
+            });
+        });
     </script>
 @endsection
